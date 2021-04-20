@@ -2,6 +2,7 @@ import { expect } from "chai";
 
 import { 
     toWei,
+    getAccounts,
     createContract 
 } from '../scripts/utils';
 
@@ -25,14 +26,17 @@ describe('Mining', () => {
         pools = await mining.getMiningPools()
         expect(pools[0]).to.equal("0x0000000000000000000000000000000000000000");
 
-        const user0 = "0xd595F7c2C071d3FD8f5587931EdF34E92f9ad39F";
         const user1 = "0x276EB779d7Ca51a5F7fba02Bf83d9739dA11e3ba";
         const user2 = "0xc4E2fB5D38cd947DaEeBe07825c009402109568F";
-        await ctk.mint(user0, toWei('1000'));
+        var accounts = await getAccounts();
+        const user0 = accounts[0];
+        await ctk.mint(user0.address, toWei('1000'));
+        await ctk.connect(user0).approve(mining.address, toWei("10000"));
+        expect(await ctk.balanceOf(user0.address)).to.equal(toWei('1000'));
         await mining.connect(user0).disperseMCB([user1, user2], [toWei('200'), toWei('500')], 1000);
 
-        expect(await ctk.balanceOf(user0)).to.equal(toWei('300'));
+        expect(await ctk.balanceOf(user0.address)).to.equal(toWei('300'));
         expect(await ctk.balanceOf(user1)).to.equal(toWei('200'));
         expect(await ctk.balanceOf(user2)).to.equal(toWei('500'));
     });
-});
+})
