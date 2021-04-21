@@ -14,8 +14,9 @@ contract Mining is Ownable {
     int256 internal _budget;
     int256 internal _rebateRate;
     address[] internal _pools;
+    mapping(address => address) internal _poolCollaterals;
 
-    event AddMiningPool(address indexed pool);
+    event AddMiningPool(address indexed pool, address indexed collateral);
     event DelMiningPool(address indexed pool);
     event RebateRateChange(int256 prevRebateRate, int256 newRebateRate);
     event MiningBudgetChange(int256 prevBudget, int256 newBudget);
@@ -61,14 +62,16 @@ contract Mining is Ownable {
      * @notice  add mining pool. Can only called by owner.
      *
      * @param   pool  pool address for mining
+     * @param   collateral  collateral address of pool
      */
-    function addMiningPool(address pool) external onlyOwner {
-        for (uint256 i = 0; i < _pools.length; i++) {
-            require(_pools[i] != pool, "pool already exists");
-        }
+    function addMiningPool(address pool, address collateral) external onlyOwner {
+        require(pool != address(0), "invalid pool address");
+        require(collateral != address(0), "invalid collateral address");
+        require(_poolCollaterals[pool] == address(0), "pool already exists");
 
         _pools.push(pool);
-        emit AddMiningPool(pool);
+        _poolCollaterals[pool] = collateral;
+        emit AddMiningPool(pool, collateral);
     }
 
     /**
@@ -77,17 +80,17 @@ contract Mining is Ownable {
      * @param   pool  pool address for mining
      */
     function delMiningPool(address pool) external onlyOwner {
-        bool isExist = false;
+        require(pool != address(0), "invalid pool address");
+        require(_poolCollaterals[pool] != address(0), "pool not exists");
+
         uint256 i = 0;
         for (i = 0; i < _pools.length; i++) {
             if (_pools[i] == pool) {
-                isExist = true;
                 break;
             }
         }
-
-        require(isExist, "pool not exists");
         delete _pools[i];
+        delete _poolCollaterals[pool];
         emit DelMiningPool(pool);
     }
 

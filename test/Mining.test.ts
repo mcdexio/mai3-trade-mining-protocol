@@ -18,9 +18,14 @@ describe('Mining', () => {
         expect(await mining.getBudget()).to.equal(toWei('2000'));
 
         const pool = "0x3e46dd62b5ce4246e739748c9de043f9f3337bb2";
-        await mining.addMiningPool(pool);
+        const collateral = "0x8b2c4fa78fba24e4cbb4b0ca7b06a29130317093";
+        await mining.addMiningPool(pool, collateral);
         var pools = await mining.getMiningPools()
         expect(pools[0].toLowerCase()).to.equal("0x3e46dd62b5ce4246e739748c9de043f9f3337bb2");
+
+        await expect(mining.addMiningPool(pool, collateral)).to.be.revertedWith("pool already exists");
+        await expect(mining.delMiningPool(collateral)).to.be.revertedWith("pool not exists");
+
 
         await mining.delMiningPool(pool);
         pools = await mining.getMiningPools()
@@ -33,6 +38,8 @@ describe('Mining', () => {
         await ctk.mint(user0.address, toWei('1000'));
         await ctk.connect(user0).approve(mining.address, toWei("10000"));
         expect(await ctk.balanceOf(user0.address)).to.equal(toWei('1000'));
+        await expect(mining.connect(user0).disperseMCB([user1, user2], [toWei('800'), toWei('500')], 1000)).to.be.revertedWith('transfer amount exceeds balance');
+
         await mining.connect(user0).disperseMCB([user1, user2], [toWei('200'), toWei('500')], 1000);
 
         expect(await ctk.balanceOf(user0.address)).to.equal(toWei('300'));
