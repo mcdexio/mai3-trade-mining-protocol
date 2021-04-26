@@ -36,3 +36,17 @@ export async function createContract(path, args = [], libraries = {}) {
         return await factory.deploy(...args);
     }
 }
+
+export function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export async function ensureFinished(transation): Promise<any> {
+    const result = await transation;
+    if (typeof result.deployTransaction != 'undefined') {
+        await result.deployTransaction.wait()
+    } else {
+        await result.wait()
+    }
+    return result
+}

@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 // erc20 interface for mcb token transfer
 interface IERC20 {
     function transfer(address to, uint256 value) external returns (bool);
+    function balanceOf(address owner) external returns (uint256);
     function transferFrom(address from, address to, uint256 value) external returns (bool);
 }
 
@@ -84,7 +85,8 @@ contract Mining is Ownable {
         require(_poolCollaterals[pool] != address(0), "pool not exists");
 
         uint256 i = 0;
-        for (i = 0; i < _pools.length; i++) {
+        uint256 len = _pools.length;
+        for (i = 0; i < len; i++) {
             if (_pools[i] == pool) {
                 break;
             }
@@ -125,16 +127,17 @@ contract Mining is Ownable {
      * @param   values miner rewards
      * @param   paidBlock blocknumber of calculate reward
      */
-    function disperseMCB(address[] memory recipients, uint256[] memory values, uint256 paidBlock) external {
+    function disperseMCB(address[] memory recipients, uint256[] memory values, uint256 paidBlock) external onlyOwner {
         IERC20 token = IERC20(_mcb);
         uint256 total = 0;
-        for (uint256 i = 0; i < recipients.length; i++) {
+        uint256 len = recipients.length;
+        for (uint256 i = 0; i < len; i++) {
             total += values[i];
         }
         // transfer mcb token from sender to contract
-        require(token.transferFrom(msg.sender, address(this), total), "transfer to contract failed.");
+        require(token.balanceOf(address(this)) >= total, "mcb balance not enough.");
         // transfer mcb token to each user
-        for (uint256 i = 0; i < recipients.length; i++) {
+        for (uint256 i = 0; i < len; i++) {
             require(token.transfer(recipients[i], values[i]), "transfer failed.");
             emit RewardPaid(recipients[i], values[i], paidBlock);
         }
