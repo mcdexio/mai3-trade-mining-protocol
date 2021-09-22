@@ -191,6 +191,11 @@ describe('Staking', () => {
 
         await staking.setBlockTime(478201);
         expect(await staking.calcUnlockTime(user1.address, toWei("0"))).to.equal(478200)
+        expect(await staking.secondsUntilUnlock(user1.address), "secondsUntilUnlock").to.equal(0)
+
+        expect(await staking.calcUnlockTime(user1.address, toWei("2"))).to.equal(478201 + 864000)
+        await staking.connect(user1).stake(toWei("2"))
+        expect(await staking.unlockTime(user1.address), "unlockTime").to.equal(478201 + 864000)
     })
 
     it("something wrong", async () => {

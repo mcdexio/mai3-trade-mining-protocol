@@ -103,6 +103,9 @@ contract MCBStaking is Initializable, ReentrancyGuardUpgradeable, OwnableUpgrade
         }
         uint256 current = _blockTime();
         uint256 remaining = eta > current ? eta - current : 0;
+        if (remaining == 0) {
+            return current + lockPeriod;
+        }
         return
             current +
             (staked.balance * remaining + amount * lockPeriod) /
