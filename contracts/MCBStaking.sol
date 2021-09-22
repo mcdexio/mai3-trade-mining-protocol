@@ -40,24 +40,29 @@ contract MCBStaking is Initializable, ReentrancyGuardUpgradeable, OwnableUpgrade
         _setUnlockPeriod(lockPeriod_);
     }
 
+    /// @notice Get staked balance of account.
     function balanceOf(address account) public view returns (uint256) {
         return stakedBalances[account].balance;
     }
 
+    /// @notice Get timestamp of unlock time.
     function unlockTime(address account) public view returns (uint256) {
         return stakedBalances[account].unlockTime;
     }
 
+    /// @notice Get expected unlock time if try to stake 'amount' tokens.
     function calcUnlockTime(address account, uint256 amount) public view returns (uint256) {
         return _calcUnlockTime(stakedBalances[account], amount);
     }
 
+    /// @notice Get remaining seconds before unlock.
     function secondsUntilUnlock(address account) public view returns (uint256) {
         uint256 eta = stakedBalances[account].unlockTime;
         uint256 current = _blockTime();
         return eta > current ? eta - current : 0;
     }
 
+    /// @notice Stake token into contract and refresh unlock time according to `_calcUnlockTime`.
     function stake(uint256 amount) external nonReentrant {
         require(amount != 0, "MCBStaking::stake::ZeroStakeAmount");
         StakedBalance storage staked = stakedBalances[msg.sender];
@@ -70,6 +75,7 @@ contract MCBStaking is Initializable, ReentrancyGuardUpgradeable, OwnableUpgrade
         emit Stake(msg.sender, amount, staked.balance, staked.unlockTime);
     }
 
+    /// @notice Redeem token from contract if time has already surpassed the `unlockTime`.
     function redeem() external nonReentrant {
         StakedBalance storage staked = stakedBalances[msg.sender];
         require(staked.balance != 0, "MCBStaking::redeem::NotStaked");
@@ -82,6 +88,7 @@ contract MCBStaking is Initializable, ReentrancyGuardUpgradeable, OwnableUpgrade
         emit Redeem(msg.sender, balance);
     }
 
+    /// @notice Set new unlock period which only applies on new stakes.
     function setUnlockPeriod(uint256 period) external onlyOwner {
         _setUnlockPeriod(period);
     }
@@ -98,14 +105,18 @@ contract MCBStaking is Initializable, ReentrancyGuardUpgradeable, OwnableUpgrade
         returns (uint256)
     {
         uint256 eta = staked.unlockTime;
+        // protection
         if (amount == 0) {
             return eta;
         }
         uint256 current = _blockTime();
         uint256 remaining = eta > current ? eta - current : 0;
+        // if last staking ends, lock all funds in contract by lockPeriod
         if (remaining == 0) {
             return current + lockPeriod;
         }
+        // else update the unlockTime with (p + nT) / (m + n)
+        // ref: https://docs.google.com/document/d/1IC4mmb2GnEZ3nDTj1Tq2gypsNpHOZjNFQGncGDnOsRk/edit
         return
             current +
             (staked.balance * remaining + amount * lockPeriod) /
