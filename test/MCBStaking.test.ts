@@ -27,6 +27,7 @@ describe('Staking', () => {
         staking = await createContract("TestMCBStaking")
         stakeToken = await createContract("TestERC20", ["TTK", "TTK", 18])
         await staking.initialize(stakeToken.address, 30)
+
     })
 
     it("stake / redeem - raw", async () => {
@@ -193,6 +194,8 @@ describe('Staking', () => {
     })
 
     it("something wrong", async () => {
+        await expect(staking.initialize(stakeToken.address, 30)).to.be.revertedWith("contract is already initialized")
+
         await staking.setBlockTime(1000);
         await staking.setUnlockPeriod(86400);
         await expect(staking.setUnlockPeriod(86400)).to.be.revertedWith("MCBStaking::_setUnlockPeriod::PeriodUnchanged");
