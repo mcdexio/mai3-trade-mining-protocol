@@ -2,7 +2,12 @@ import { task } from "hardhat/config";
 import "@nomiclabs/hardhat-waffle";
 import "hardhat-contract-sizer";
 import "solidity-coverage"
+import "@nomiclabs/hardhat-etherscan";
 import "./misc/typechain-ethers-v5-mcdex";
+
+
+const pk = process.env["PK"];
+const etherscanApiKey = process.env["ETHERSCAN_API_KEY"];
 
 task("accounts", "Prints the list of accounts", async (args, hre) => {
     const accounts = await hre.ethers.getSigners();
@@ -33,7 +38,7 @@ task("deploy", "Deploy a single contract")
     .addOptionalPositionalParam("args", "Args of contract constructor, seprated by common ','")
     .setAction(async (args, hre) => {
         if (typeof args.args != 'undefined') {
-            args.args = args.args.split('|')
+            args.args = args.args.split(',')
         }
         const factory = await hre.ethers.getContractFactory(args.name);
         const contract = await factory.deploy(...args.args);
@@ -46,7 +51,7 @@ task("send", "Call contract function")
     .addOptionalPositionalParam("args", "Args of function call, seprated by common ','")
     .setAction(async (args, hre) => {
         if (typeof args.args != 'undefined') {
-            args.args = args.args.split('|')
+            args.args = args.args.split(',')
         }
         args.sig = args.sig.replace('function ', '')
         var iface = new hre.ethers.utils.Interface(["function " + args.sig])
@@ -93,10 +98,22 @@ module.exports = {
         hardhat: {
             allowUnlimitedContractSize: true
         },
-        s10: {
-            url: "http://server10.jy.mcarlo.com:8747",
-            gasPrice: 1,
-            blockGasLimit: "8000000"
+        bsc: {
+            url: `https://bsc-dataseed4.binance.org/`,
+            gasPrice: 5e9,
+            accounts: [pk],
+        },
+        arbr1: {
+            url: `https://arb1.arbitrum.io/rpc`,
+            gasPrice: 2e9,
+            blockGasLimit: "80000000",
+            accounts: [pk],
+        },
+        arbrinkeby: {
+            url: `https://rinkeby.arbitrum.io/rpc`,
+            gasPrice: 6e8,
+            blockGasLimit: "80000000",
+            accounts: [pk],
         },
         kovan: {
             url: "https://kovan.infura.io/v3/3582010d3cc14ab183653e5861d0c118",
@@ -150,6 +167,9 @@ module.exports = {
         path: './abi',
         clear: false,
         flat: true,
+    },
+    etherscan: {
+        apiKey: etherscanApiKey
     },
     mocha: {
         timeout: 60000

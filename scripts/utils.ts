@@ -50,3 +50,12 @@ export async function ensureFinished(transation): Promise<any> {
     }
     return result
 }
+
+
+export function hash(x): Buffer {
+    return Buffer.from(ethers.utils.keccak256(x).slice(2), 'hex')
+}
+
+export function padAccount(account: string): Buffer {
+    return Buffer.from(account.slice(2).padStart(64, '0'), 'hex')
+}
