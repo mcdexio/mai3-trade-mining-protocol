@@ -198,6 +198,26 @@ describe('Staking', () => {
         expect(await staking.unlockTime(user1.address), "unlockTime").to.equal(478201 + 864000)
     })
 
+    it("stake / redeem - restake", async () => {
+        await staking.setBlockTime(1000);
+        // so the unlock time should be 87400
+        await staking.setUnlockPeriod(86400);
+
+        await stakeToken.mint(user1.address, toWei("100"))
+
+        await stakeToken.connect(user1).approve(staking.address, toWei("1000000"))
+
+        await staking.connect(user1).stake(toWei("2"))
+        expect(await staking.unlockTime(user1.address), "unlockTime").to.equal(87400)
+        expect(await staking.balanceOf(user1.address), "balanceOf").to.equal(toWei("2"))
+
+        await staking.setBlockTime(2000);
+        await staking.connect(user1).restake()
+        expect(await staking.unlockTime(user1.address), "unlockTime").to.equal(88400)
+        expect(await staking.balanceOf(user1.address), "balanceOf").to.equal(toWei("2"))
+
+    })
+
     it("something wrong", async () => {
         await expect(staking.initialize(stakeToken.address, 30)).to.be.revertedWith("contract is already initialized")
 

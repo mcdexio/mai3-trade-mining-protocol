@@ -103,6 +103,10 @@ module.exports = {
             gasPrice: 5e9,
             accounts: [pk],
         },
+        bsctest: {
+            url: `https://data-seed-prebsc-1-s1.binance.org:8545`,
+            accounts: [pk],
+        },
         arbr1: {
             url: `https://arb1.arbitrum.io/rpc`,
             gasPrice: 2e9,

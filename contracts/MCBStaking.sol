@@ -75,6 +75,14 @@ contract MCBStaking is Initializable, ReentrancyGuardUpgradeable, OwnableUpgrade
         emit Stake(msg.sender, amount, staked.balance, staked.unlockTime);
     }
 
+    /// @notice Refresh unlock time to current time + lockPeriod
+    function restake() external {
+        StakedBalance storage staked = stakedBalances[msg.sender];
+        require(staked.balance != 0, "MCBStaking::restake::NotStakedYet");
+        staked.unlockTime = _blockTime() + lockPeriod;
+        emit Stake(msg.sender, 0, staked.balance, staked.unlockTime);
+    }
+
     /// @notice Redeem token from contract if time has already surpassed the `unlockTime`.
     function redeem() external nonReentrant {
         StakedBalance storage staked = stakedBalances[msg.sender];
