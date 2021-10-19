@@ -2,11 +2,6 @@ const ethers = require('ethers')
 const { MerkleTree } = require('merkletreejs')
 const epoch0Data = require('./epoch0.json')
 
-const Endpoint = "https://arb1.arbitrum.io/rpc"
-const PrivateKey = process.env["PK"]
-const MerkleRedeemAddress = "0x205285d6eef9055779650f6556c3704a5b514271"
-
-
 const hash = (x) => Buffer.from(ethers.utils.keccak256(x).slice(2), 'hex')
 
 const padAccount = (account) => Buffer.from(account.slice(2).padStart(64, '0'), 'hex')
