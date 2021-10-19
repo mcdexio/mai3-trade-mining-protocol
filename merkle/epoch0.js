@@ -10,11 +10,6 @@ const makeTree = accounts => new MerkleTree(accounts.map(x => padAccount(x)), ha
 
 const makeLeaf = (user, amount) => ethers.utils.solidityKeccak256(["address", "uint256"], [user, amount])
 
-async function claim() {
-    const provider = new ethers.providers.JsonRpcProvider(Endpoint)
-    const wallet = new ethers.Wallet(PrivateKey, provider)
-}
-
 function generateRoot() {
     return makeTree(epoch0Data.map(x => makeLeaf(x[0], x[1]))).getRoot().toString('hex')
 }
