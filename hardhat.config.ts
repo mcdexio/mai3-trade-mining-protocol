@@ -107,7 +107,7 @@ module.exports = {
             url: `https://data-seed-prebsc-1-s1.binance.org:8545`,
             accounts: [pk],
         },
-        arbr1: {
+        arb1: {
             url: `https://arb1.arbitrum.io/rpc`,
             gasPrice: 2e9,
             blockGasLimit: "80000000",
