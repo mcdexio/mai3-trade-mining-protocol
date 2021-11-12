@@ -115,7 +115,7 @@ module.exports = {
         },
         arbrinkeby: {
             url: `https://rinkeby.arbitrum.io/rpc`,
-            gasPrice: 6e8,
+            // gasPrice: 5e9,
             blockGasLimit: "80000000",
             accounts: [pk],
         },
