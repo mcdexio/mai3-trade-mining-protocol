@@ -27,14 +27,14 @@ async function main() {
     // const testStakeToken = { address: "or the token u like"} 
     const redeem = await ensureFinished(createContract("MerkleRedeem"))
     console.log(`redeem => ${redeem.address}`)
-    const proxy = await createContract(
+    const proxy = await ensureFinished(createContract(
         "TransparentUpgradeableProxy",
         [redeem.address, addressOf("ProxyAdmin"), "0x"]
-    )
+    ))
     console.log(`proxy => ${proxy.address}`)
     // const final = await ensureFinished(createContract("MerkleRedeem"))
     const final = await ethers.getContractAt("MerkleRedeem", proxy.address)
-    await final.initialize(addressOf("MCB"))
+    await ensureFinished(final.initialize(addressOf("MCB")))
 
     const rewardToken = await final.token()
     console.log(`MerkleRedeem is deployed at ${final.address}(${rewardToken})`)
