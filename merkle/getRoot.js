@@ -19,7 +19,7 @@ function calcEpoch(path) {
     const root = generateRoot()
     console.log(`${path}: root => ${"0x" + root}`)
     // for claimer
-    // const proof = generateProof("0x022e3ce4eda264b3e3fef62036c8182ceb88e6ce", "19672585930000000000")
+    // const proof = generateProof("0xebedc71002b747d26d8427b2f6aaa2ef99ede597", "780169314936788527").map(s => `"${s}"`)
     // console.log(`${path}: proof => ${proof}`)
     // then call contract to claim
     // MerkleRedeem("0x205285d6eef9055779650f6556c3704a5b514271").claimEpoch(0, amount, proof)
@@ -42,6 +42,9 @@ function main() {
 
     // epoch2Bsc
     calcEpoch('./bscGasRebate0.json')
+
+    // bscGasRebate1
+    calcEpoch('./bscGasRebate1.json')
 }
 
 main()
