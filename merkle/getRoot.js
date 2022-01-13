@@ -78,6 +78,9 @@ function main() {
 
     // bscGasRebate6
     calcEpoch("./bscGasRebate6.json")
+
+    // bscGasRebate7
+    calcEpoch("./bscGasRebate7.json")
 }
 
 main()
