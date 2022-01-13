@@ -58,23 +58,26 @@ function main() {
     // epoch6Arb, PATCHED
     calcEpoch('./epoch6Arb.json')
 
-    // // bscGasRebate0
-    // calcEpoch('./bscGasRebate0.json')
+    // bscGasRebate0
+    calcEpoch('./bscGasRebate0.json')
 
-    // // // bscGasRebate1
-    // calcEpoch('./bscGasRebate1.json')
+    // // bscGasRebate1
+    calcEpoch('./bscGasRebate1.json')
 
-    // // bscGasRebate2
-    // calcEpoch('./bscGasRebate2.json')
+    // bscGasRebate2
+    calcEpoch('./bscGasRebate2.json')
 
-    // // bscGasRebate3
-    // calcEpoch('./bscGasRebate3.json')
+    // bscGasRebate3
+    calcEpoch('./bscGasRebate3.json')
 
-    // // bscGasRebate4
-    // calcEpoch("./bscGasRebate4.json")
+    // bscGasRebate4
+    calcEpoch("./bscGasRebate4.json")
 
-    // // bscGasRebate5
-    // calcEpoch("./bscGasRebate5.json")
+    // bscGasRebate5
+    calcEpoch("./bscGasRebate5.json")
+
+    // bscGasRebate6
+    calcEpoch("./bscGasRebate6.json")
 }
 
 main()
