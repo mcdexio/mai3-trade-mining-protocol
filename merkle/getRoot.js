@@ -46,22 +46,28 @@ function main() {
     // epoch3Bsc
     calcEpoch('./epoch3Bsc.json')
 
-    // epoch4Arb
-    calcEpoch('./epoch4Arb.json')
-
     // epoch4Bsc
     calcEpoch('./epoch4Bsc.json')
+
+    // epoch4Arb
+    calcEpoch('./epoch4Arb.json')
 
     // epoch5Bsc
     calcEpoch('./epoch5Bsc.json')
 
-    // epoch6Arb, PATCHED
+    // epoch5Arb
+    calcEpoch('./epoch5Arb.json')
+
+    // epoch6Bsc
+    calcEpoch('./epoch6Bsc.json')
+
+    // epoch6Arb
     calcEpoch('./epoch6Arb.json')
 
     // bscGasRebate0
     calcEpoch('./bscGasRebate0.json')
 
-    // // bscGasRebate1
+    // bscGasRebate1
     calcEpoch('./bscGasRebate1.json')
 
     // bscGasRebate2
