@@ -64,6 +64,12 @@ function main() {
     // epoch6Arb
     calcEpoch('./epoch6Arb.json')
 
+    // epoch7Bsc
+    calcEpoch('./epoch7Bsc.json')
+
+    // epoch7Arb
+    calcEpoch('./epoch7Arb.json')
+
     // bscGasRebate0
     calcEpoch('./bscGasRebate0.json')
 
